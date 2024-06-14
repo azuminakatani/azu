@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Stock;
+use App\Stock;
+use App\Store;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,11 +16,11 @@ class DisplayController extends Controller
             $user = Auth::user();
             
             if ($user->del_flg === 0) {
-                $stocks = Stock::with('product')->get();
-                return view('admin.all_stores_list', compact('stocks'));
+                $stores = Store::all();
+                return view('admin.all_stores_list', compact('stores'));
     
             } elseif ($user->del_flg === 1) {
-                $stocks = Stock::with('product')->get();
+                $stocks = Stock::where('store_id', Auth::user()->store_id)->get();
                 return view('general.inventory', compact('stocks'));
             }
         }

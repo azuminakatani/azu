@@ -23,7 +23,7 @@
                 <label for="weight">重量</label>
                 <input type="text" class="form-control" id="weight" value="{{ $incomingShipment->weight }}" readonly>
             </div>
-            <form action="{{ route('incoming_shipments.store') }}" method="POST">
+            <form action="{{ route('arrival_list.store') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-primary">登録</button>
             </form>

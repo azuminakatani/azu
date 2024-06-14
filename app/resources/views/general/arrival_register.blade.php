@@ -4,8 +4,7 @@
 @section('content')
 <div class="container">
     <h1>入荷登録</h1>
-
-    <form action="{{ route('incoming_shipments.store') }}" method="POST">
+    <form action="{{ route('arrival_list.store') }}" method="POST">
         @csrf
         <div class="form-group">
             <label for="product">商品名</label>
@@ -28,7 +27,7 @@
             <input type="number" step="0.01" class="form-control" id="weight" name="weight">
         </div>
         <button type="submit" class="btn btn-primary">登録</button>
-        <a href="{{ route('incoming_shipments.index') }}" class="btn btn-secondary">戻る</a>
+        <a href="{{ route('arrival_list') }}" class="btn btn-secondary">戻る</a>
     </form>
 </div>
 @endsection

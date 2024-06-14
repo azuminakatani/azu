@@ -27,9 +27,9 @@
             <form action="{{ route('incoming_shipments.destroy', $incomingShipment->id) }}" method="POST" style="display: inline-block;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger">削除</button>
+                <a href="{{ route('arrival_list.delete', $incomingShipment->id) }}" class="btn btn-danger" onclick="return confirm('この入荷予定を削除してもよろしいですか？')">削除</a>                </td>
             </form>
-            <a href="{{ route('incoming_shipments.index') }}" class="btn btn-secondary">戻る</a>
+            <a href="{{ route('arrival_list') }}" class="btn btn-secondary">戻る</a>
         </div>
     </div>
 </div>
