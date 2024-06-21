@@ -3,34 +3,33 @@
 
 @section('content')
 <div class="container">
-    <h1>入荷詳細</h1>
+<div class="text-center mb-3"><h2>入荷詳細</h2></div>
 
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="form-group">
-                <label for="product">商品名</label>
-                <input type="text" class="form-control" id="product" value="{{ $incomingShipment->product->name }}" readonly>
+                <div><strong>商品名:</strong> {{ $incomingShipment->product->name }}</div>
             </div>
             <div class="form-group">
-                <label for="scheduled_date">入荷予定日</label>
-                <input type="text" class="form-control" id="scheduled_date" value="{{ $incomingShipment->scheduled_date }}" readonly>
+                <div><strong>入荷予定日:</strong> {{ $incomingShipment->scheduled_date }}</div>
             </div>
             <div class="form-group">
-                <label for="quantity">数量</label>
-                <input type="text" class="form-control" id="quantity" value="{{ $incomingShipment->quantity }}" readonly>
+                <div><strong>数量:</strong> {{ $incomingShipment->quantity }}</div>
             </div>
             <div class="form-group">
-                <label for="weight">重量</label>
-                <input type="text" class="form-control" id="weight" value="{{ $incomingShipment->weight }}" readonly>
+                <div><strong>重量:</strong> {{ $incomingShipment->weight }}</div>
             </div>
-            <a href="{{ route('incoming_shipments.edit', $incomingShipment->id) }}" class="btn btn-primary">編集</a>
-            <form action="{{ route('incoming_shipments.destroy', $incomingShipment->id) }}" method="POST" style="display: inline-block;">
-                @csrf
-                @method('DELETE')
-                <a href="{{ route('arrival_list.delete', $incomingShipment->id) }}" class="btn btn-danger" onclick="return confirm('この入荷予定を削除してもよろしいですか？')">削除</a>                </td>
-            </form>
-            <a href="{{ route('arrival_list') }}" class="btn btn-secondary">戻る</a>
+            <div class="text-center">
+                <a href="{{ route('arrival_edit', $incomingShipment->id) }}" class="btn btn-primary">編集</a>
+                <form action="{{ route('arrival_delete', $incomingShipment->id) }}" method="POST" style="display: inline-block;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('この入荷予定を削除してもよろしいですか？')">削除</button>
+                </form>
+                <a href="{{ route('arrival_list') }}" class="btn btn-secondary">戻る</a>
+            </div>
         </div>
     </div>
 </div>
 @endsection
+

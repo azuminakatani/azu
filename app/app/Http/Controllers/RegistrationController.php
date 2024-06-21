@@ -5,30 +5,42 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 
 class RegistrationController extends Controller
 {
+
     public function register(Request $request){//新規登録
-        return view('register');
+        return view('auth.register');
     }
 
-    public function confirm(Request $request){//新規登録確認
-        $userData = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
-        return view('auth.confirm', compact('userData'));
+    public function confirm(Request $request)//新規登録確認
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        Session::put('registration_data', $validatedData);
+
+        return view('auth.confirm', compact('validatedData'));
     }
-    
-    public function complete(Request $request){//新規登録完了
+
+    public function complete(Request $request)//新規登録完了
+    {
+        $userData = Session::get('registration_data');
+
         $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        $user->name = $userData['name'];
+        $user->email = $userData['email'];
+        $user->password = Hash::make($userData['password']);
         $user->del_flg = 1;
         $user->save();
+
+        Session::forget('registration_data');
+
         return view('auth.complete');
     }
 

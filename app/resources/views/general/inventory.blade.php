@@ -4,10 +4,10 @@
 
 @section('content')
     <div class="container">
-        <h1>在庫一覧</h1>
+    <div class="text-center mb-3"><h2>在庫一覧</h2></div>
         <form action="{{ route('inventory.search') }}" method="GET">
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="商品名を入力してください" name="keyword">
+                <input type="text" class="form-control" placeholder="商品名で検索" name="keyword"  value="{{ isset($keyword) ? $keyword : old('keyword') }}">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="submit">検索</button>
                 </div>

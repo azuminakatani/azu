@@ -11,11 +11,17 @@
                     @csrf
                     <div class="form-group mb-3">
                         <label for="email">メールアドレス</label>
-                        <input type="text" class="form-control" id="email" name="email" value="{{ old('email') }}" />
+                        <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" />
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group mb-3">
                         <label for="password">パスワード</label>
-                        <input type="password" class="form-control" id="password" name="password" />
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" />
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="text-center mb-3">
                         <a href="{{ route('password.request') }}">パスワードの変更はこちらから</a>

@@ -1,8 +1,9 @@
+<!--24一般社員一覧-->
 @extends('layouts.layout')
 
 @section('content')
 <div class="container">
-    <h2>一般社員一覧</h2>
+<div class="text-center mb-3"><h2>一般社員一覧</h2></div>
     <div class="search-box">
         <form action="" method="GET">
             <input type="text" name="keyword" placeholder="店舗ID・名前を入力" value="{{ request('keyword') }}">

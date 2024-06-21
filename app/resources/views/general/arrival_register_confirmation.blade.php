@@ -1,34 +1,33 @@
-<!--11入荷登録確認-->
+<!--11入荷登録確認 -->
 @extends('layouts.layout')
 
 @section('content')
 <div class="container">
-    <h1>入荷登録確認</h1>
-
-    <div class="row">
+    <div class="row justify-content-center mt-5">
         <div class="col-md-6">
+            <div class="text-center mb-3"><h3>入荷登録確認</h3>
             <div class="form-group">
                 <label for="product">商品名</label>
-                <input type="text" class="form-control" id="product" value="{{ $incomingShipment->product->name }}" readonly>
+                <p>{{ $product->name }}</p>
             </div>
             <div class="form-group">
                 <label for="scheduled_date">入荷予定日</label>
-                <input type="text" class="form-control" id="scheduled_date" value="{{ $incomingShipment->scheduled_date }}" readonly>
+                <p>{{ $validatedData['scheduled_date'] }}</p>
             </div>
             <div class="form-group">
                 <label for="quantity">数量</label>
-                <input type="text" class="form-control" id="quantity" value="{{ $incomingShipment->quantity }}" readonly>
+                <p>{{ $validatedData['quantity'] }}</p>
             </div>
             <div class="form-group">
                 <label for="weight">重量</label>
-                <input type="text" class="form-control" id="weight" value="{{ $incomingShipment->weight }}" readonly>
+                <p>{{ $validatedData['weight'] }}</p>
             </div>
-            <form action="{{ route('arrival_list.store') }}" method="POST">
+            <form action="{{ route('arrival_list.complete') }}" method="post">
                 @csrf
-                <button type="submit" class="btn btn-primary">登録</button>
+                <button type="submit" class="btn btn-primary mb-3">確定</button>
             </form>
-            <a href="" class="btn btn-secondary">戻る</a>
-        </div>
+            <a href="{{ route('arrival_list.create') }}" class="btn btn-secondary">戻る</a>
+        </div></div>
     </div>
 </div>
 @endsection

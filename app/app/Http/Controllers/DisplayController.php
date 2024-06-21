@@ -27,6 +27,22 @@ class DisplayController extends Controller
         
         return view('auth.login');
     }
+
+    public function login(Request $request)
+    {
+        // ログインのバリデーション
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->intended('/');
+        }
+        return back()->withErrors([
+            'email' => 'ログインに失敗しました。メールアドレスまたはパスワードが正しくありません。',
+        ]);
+    }
 }
 
 

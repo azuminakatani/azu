@@ -3,10 +3,10 @@
 
 @section('content')
     <div class="container">
-        <h1>自店舗在庫一覧</h1>
-        <form action="{{ route('inventory.search') }}" method="GET">
+    <div class="text-center mb-3"><h2>自店舗在庫一覧</h2></div>
+        <form action="{{ route('own.inventory.search') }}" method="GET">
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="商品名を入力してください" name="keyword">
+                <input type="text" class="form-control" placeholder="商品名で検索" name="keyword">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="submit">検索</button>
                 </div>
@@ -28,7 +28,11 @@
                     <td>{{ $stock->quantity }}</td>
                     <td>{{ $stock->weight }}</td>
                     <td>
-                        <!-- 削除ボタン -->
+                    <form action="{{ route('own.inventory.delete', $stock->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <a href="{{ route('own.inventory.delete', $stock->id) }}" onclick="return confirm('本当に削除しますか？')">削除</a>                    
+                    </form> 
                     </td>
                 </tr>
                 @endforeach
