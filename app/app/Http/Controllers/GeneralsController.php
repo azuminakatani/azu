@@ -59,11 +59,9 @@ class GeneralsController extends Controller
         if ($start_date) {
             $query->where('scheduled_date', '>=', $start_date);
         } 
-    
         if ($end_date) {
             $query->where('scheduled_date', '<=', $end_date);
         }
-    
         if ($keyword) {
             $query->whereHas('product', function ($q) use ($keyword) {
                 $q->where('name', 'like', '%' . $keyword . '%');
@@ -126,51 +124,46 @@ class GeneralsController extends Controller
         $products = Product::all();
         return view('general.arrival_detail', compact('incomingShipment', 'products'));
     }
-    
+
     public function arrivalListUpdate(Request $request, $id){//入荷編集
+        
+        $validatedData = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'scheduled_date' => 'required|date',
+            'quantity' => 'required|integer|min:1',
+            'weight' => 'required|numeric|min:0',
+        ]);
+        
+        $incomingShipment = IncomingShipment::findOrFail($id);
+        $incomingShipment->product_id = $validatedData['product_id'];
+        $incomingShipment->scheduled_date = $validatedData['scheduled_date'];
+        $incomingShipment->quantity = $validatedData['quantity'];
+        $incomingShipment->weight = $validatedData['weight'];
+        $incomingShipment->save();
 
-    $validatedData = $request->validate([
-        'product_id' => 'required|exists:products,id',
-        'scheduled_date' => 'required|date',
-        'quantity' => 'required|integer|min:1',
-        'weight' => 'required|numeric|min:0',
-    ]);
-
-    $incomingShipment = IncomingShipment::findOrFail($id);
-    $incomingShipment->product_id = $validatedData['product_id'];
-    $incomingShipment->scheduled_date = $validatedData['scheduled_date'];
-    $incomingShipment->quantity = $validatedData['quantity'];
-    $incomingShipment->weight = $validatedData['weight'];
-
-    $incomingShipment->save();
-    
-    return redirect()->route('arrival_list.show', $incomingShipment->id);
-}
-
-
-public function confirmArrival($id){//入荷確定
-    
-    $incomingShipment = IncomingShipment::findOrFail($id);
-
-    $stock = Stock::where('product_id', $incomingShipment->product_id)
-                  ->where('store_id', $incomingShipment->store_id)
-                  ->first();
-
-    if ($stock) {
-        $stock->quantity += $incomingShipment->quantity;
-        $stock->weight += $incomingShipment->weight;
-        $stock->save();
-    } else {
-        $stock = new Stock();
-        $stock->product_id = $incomingShipment->product_id;
-        $stock->store_id = $incomingShipment->store_id;
-        $stock->quantity = $incomingShipment->quantity;
-        $stock->weight = $incomingShipment->weight;
-        $stock->save();
+        return redirect()->route('arrival_list.show', $incomingShipment->id);
     }
-    $incomingShipment->delete();
-
-    return redirect()->route('arrival_list');
-}
-
+    
+    public function confirmArrival($id){//入荷確定
+        $incomingShipment = IncomingShipment::findOrFail($id);
+        
+        $stock = Stock::where('product_id', $incomingShipment->product_id)
+            ->where('store_id', $incomingShipment->store_id)
+            ->first();
+            
+        if ($stock) {
+            $stock->quantity += $incomingShipment->quantity;
+            $stock->weight += $incomingShipment->weight;
+            $stock->save();
+        } else {
+            $stock = new Stock();
+            $stock->product_id = $incomingShipment->product_id;
+            $stock->store_id = $incomingShipment->store_id;
+            $stock->quantity = $incomingShipment->quantity;
+            $stock->weight = $incomingShipment->weight;
+            $stock->save();
+        }
+        $incomingShipment->delete();
+        return redirect()->route('arrival_list');
+    }
 }

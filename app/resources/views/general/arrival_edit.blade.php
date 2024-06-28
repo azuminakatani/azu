@@ -4,7 +4,6 @@
 @section('content')
 <div class="container">
 <div class="text-center mb-3"><h2>入荷詳細</h2></div>
-
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="form-group">

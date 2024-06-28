@@ -34,7 +34,7 @@ Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEm
 Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.update');
 Route::get('/password/reset', [PasswordResetController::class, 'showResetEmailForm'])->name('password.request');
 Route::get('/password/reset/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
-
+Route::get('/password/reset/complete', [PasswordResetController::class, 'showResetCompleteForm'])->name('password.reset.complete');
 
 //管理者
 //全店舗一覧
@@ -76,7 +76,12 @@ Route::post('/arrival_Schedule/complete', [AdminController::class, 'arrivalSched
 
 //一般社員一覧
 Route::get('/employee_list', [AdminController::class, 'employeeList'])->name('employee_list');
+Route::get('/employee_list/search', [AdminController::class, 'employeeSearch'])->name('employee_list.search');
 Route::delete('/employees/{id}', [AdminController::class, 'employeesDelete'])->name('employees.delete');
+Route::get('/employees/create', [AdminController::class, 'employeeCreate'])->name('employees.create');
+Route::post('/employees/store', [AdminController::class, 'employeeStore'])->name('employees.store');
+Route::get('/employees/confirm', [AdminController::class, 'employeeConfirm'])->name('employees.confirm');
+Route::post('/employees/complete', [AdminController::class, 'employeeComplete'])->name('employees.complete');
 
 
 

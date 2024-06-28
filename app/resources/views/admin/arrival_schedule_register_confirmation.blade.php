@@ -5,7 +5,6 @@
 <div class="container">
     <div class="text-center mb-3"><h2>入荷登録確認</h2></div>
     <div class="row">
-        <div class="col-md-6">
         <div class="text-center mb-3">
             <form action="{{ route('arrival_schedule.complete') }}" method="POST">
                 @csrf
@@ -32,7 +31,7 @@
                 <button type="submit" class="btn btn-primary">確定</button>
             </form>
             <a href="{{ route('arrival_schedule.create') }}" class="btn btn-secondary">戻る</a>
-        </div></div>
+        </div>
     </div>
 </div>
 @endsection

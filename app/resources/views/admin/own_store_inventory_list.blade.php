@@ -4,14 +4,14 @@
 @section('content')
     <div class="container">
     <div class="text-center mb-3"><h2>自店舗在庫一覧</h2></div>
-        <form action="{{ route('own.inventory.search') }}" method="GET">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="商品名で検索" name="keyword">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="submit">検索</button>
-                </div>
-            </div>
-        </form>
+    <form action="{{ route('own.inventory.search') }}" method="GET">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="商品名で検索" name="keyword">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">検索</button>
+        </div>
+    </div>
+</form>
         <table class="table">
             <thead>
                 <tr>
@@ -39,4 +39,46 @@
             </tbody>
         </table>
     </div>
+    
+<div class="scroll-to-top">
+    <a id="scroll-to-top-link" href="#" onclick="scrollToTop();">TOP</a>
+</div>
+
+<style>
+    .scroll-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    #scroll-to-top-link {
+        display: none;
+        padding: 10px 20px;
+        background-color: rgba(0, 123, 255, 0.7);;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    #scroll-to-top-link:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<script>
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('scroll', function() {
+        var scrollButton = document.getElementById('scroll-to-top-link');
+        if (window.scrollY > 100) {
+            scrollButton.style.display = 'block';
+        } else {
+            scrollButton.style.display = 'none';
+        }
+    });
+</script>
+
 @endsection

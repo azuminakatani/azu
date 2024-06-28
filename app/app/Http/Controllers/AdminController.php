@@ -8,6 +8,7 @@ use App\Product;
 use App\User;
 use App\IncomingShipment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 
@@ -161,7 +162,7 @@ class AdminController extends Controller
             });
         }
         $stocks = $query->get();
-        return view('admin.own_store_inventory', compact('stocks', 'keyword'));
+        return view('admin.own_store_inventory_list', compact('stocks', 'keyword'));
     }
 
     public function ownInventoryDelete($id){//自店舗在庫削除
@@ -177,7 +178,7 @@ class AdminController extends Controller
     }
 
 
-    public function arrivalScheduleSearch(Request $request){//入荷予定検索
+    public function searchArrivalSchedule(Request $request){//入荷予定検索
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
         $keyword = $request->input('keyword');
@@ -283,20 +284,65 @@ class AdminController extends Controller
         return view('admin.employee_list', compact('employees'));
     }
 
-    public function employeDelete($id){//一般社員削除
+    public function employeeSearch(Request $request){//一般社員検索
+        $keyword = $request->input('keyword');
+        $query = User::query();
+
+        if ($keyword) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('store_id', 'like', "%$keyword%")
+                  ->orWhere('name', 'like', "%$keyword%");
+            });
+        }
+
+        $employees = $query->where('del_flg', 1)->get();
+
+        return view('admin.employee_list', compact('employees', 'keyword'));
+    }
+
+
+    public function employeesDelete($id){//一般社員削除
         $employee = User::findOrFail($id); 
         $employee->delete();
         return redirect()->back()->with('success', '社員が削除されました');
     }
     
-    /*public function search(Request $request){//全店舗一覧
+    public function employeeCreate(){//登録画面へ
+        $validatedData = Session::get('employee_registration', []);
+        return view('admin.employee_register', compact('validatedData'));
+    }
+        
+    public function employeeStore(Request $request){//登録確認画面へ
+        $validatedData = $request->validate([
+            'store_id' => 'required',
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+        ]);
+        Session::put('employee_registration', $validatedData);
+        return redirect()->route('employees.confirm');
+    }
+    
+    public function employeeConfirm(){//
+        $validatedData = Session::get('employee_registration');
+        return view('admin.employee_register_confirmation', compact('validatedData'));
+    }
+    
+    public function employeeComplete(Request $request){//登録完了
+        $validatedData = Session::get('employee_registration');
 
-        $keyword = $request->input('keyword');
-        $stocks = Stock::whereHas('product', function ($query) use ($keyword) {
-        $query->where('name', 'like', '%' . $keyword . '%');
-        })->get();
+        $employee = new User();
+        $employee->store_id = $validatedData['store_id'];
+        $employee->name = $validatedData['name'];
+        $employee->email = $validatedData['email'];
+        $employee->password = Hash::make($validatedData['password']);
+        $employee->del_flg = 1;
+        $employee->save();
 
-        return view('inventory.search_results', compact('stocks'));
-    }*/
+        Session::forget('employee_registration');
+
+        return redirect()->route('employee_list');
+    }
+
 
 }
