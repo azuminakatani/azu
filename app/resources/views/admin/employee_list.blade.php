@@ -7,7 +7,7 @@
 <div class="search-box mb-3">
     <form action="{{ route('employee_list.search') }}" method="GET">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="店舗ID・名前を入力" name="keyword" value="{{ request('keyword') }}">
+            <input type="text" class="form-control" placeholder="店舗IDor名前を入力" name="keyword" value="{{ request('keyword') }}">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">検索</button>
             </div>
@@ -15,7 +15,7 @@
     </form>
 </div>
     <div class="button-group">
-        <button onclick="location.href='{{ route('employees.create') }}'">社員登録</button>
+        <a href="{{ route('employees.create') }}" class="btn btn-primary">社員登録</a>
     </div>
     <div class="employee-list">
         <table class="table">

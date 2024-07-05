@@ -39,7 +39,7 @@
     <div class="row justify-content-center">
         <table class="table col-md-8">
             <thead>
-                <tr>
+                <tr>                    
                     <th class="text-center">商品名</th>
                     <th class="text-center">入荷予定日</th>
                     <th class="text-center">数量</th>
@@ -48,17 +48,17 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($incomingShipments as $incomingShipment)
-                <tr>
-                    <td class="text-center">{{ $incomingShipment->product->name }}</td>
-                    <td class="text-center">{{ $incomingShipment->scheduled_date }}</td>
-                    <td class="text-center">{{ $incomingShipment->quantity }}</td>
-                    <td class="text-center">{{ $incomingShipment->weight }}</td>
-                    <td class="text-center">
-                    <a href="{{ route('arrival_schedule.confirm', $incomingShipment->id) }}" class="btn btn-success"
-                    onclick="return confirm('この入荷を確定しますか？')">確定</a></td>
-                </tr>
-                @endforeach
+            @foreach ($incomingShipments as $incomingShipment)
+            <tr>
+                <td class="text-center">{{ $incomingShipment->product->name }}</td>
+                <td class="text-center">{{ $incomingShipment->scheduled_date }}</td>
+                <td class="text-center">{{ $incomingShipment->quantity }}</td>
+                <td class="text-center">{{ $incomingShipment->weight }}</td>
+                <td class="text-center">
+                    <a href="{{ route('arrival_schedule.confirm', $incomingShipment->id) }}" class="btn btn-success"onclick="return confirm('この入荷を確定しますか？')">確定</a>
+                </td>
+            </tr>
+            @endforeach
             </tbody>
         </table>
     </div>

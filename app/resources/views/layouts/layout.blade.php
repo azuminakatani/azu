@@ -40,7 +40,7 @@
                 <div class="container" style="display: flex;">
                  @auth
                     <div id="dashboard-links" style="display: flex;">
-                        @if(Auth::user()->del_flg === 0)
+                        @if(Auth::user()->role === 0)
                             <a id="link-1" href="{{ route('all_stores_list') }}" style="margin-right: 10px;">全店舗</a>
                             <a id="link-2" href="{{ route('product_list') }}" style="margin-right: 10px;">商品</a>
                             <a id="link-3" href="{{ route('own_store_inventory') }}" style="margin-right: 10px;">自店舗</a>

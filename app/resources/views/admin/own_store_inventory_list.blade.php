@@ -31,8 +31,8 @@
                     <form action="{{ route('own.inventory.delete', $stock->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <a href="{{ route('own.inventory.delete', $stock->id) }}" onclick="return confirm('本当に削除しますか？')">削除</a>                    
-                    </form> 
+                        <button type="submit" onclick="return confirm('本当に削除しますか？')">削除</button>
+                        </form> 
                     </td>
                 </tr>
                 @endforeach

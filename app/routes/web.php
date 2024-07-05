@@ -31,11 +31,14 @@ Route::post('/register/complete', [RegistrationController::class, 'complete'])->
 
 //パスワードリセット
 Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.update');
+Route::post('/password/update', [PasswordResetController::class, 'reset'])->name('password.update');
 Route::get('/password/reset', [PasswordResetController::class, 'showResetEmailForm'])->name('password.request');
 Route::get('/password/reset/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
-Route::get('/password/reset/complete', [PasswordResetController::class, 'showResetCompleteForm'])->name('password.reset.complete');
 
+
+Route::middleware('auth')->group(function () {
+
+    Route::prefix('admin')->group(function () {
 //管理者
 //全店舗一覧
 Route::get('/all_stores_list', [AdminController::class, 'allStoresList'])->name('all_stores_list');
@@ -61,6 +64,7 @@ Route::post('/products/register/confirmation', [AdminController::class, 'Product
 Route::get('/own_store_inventory', [AdminController::class, 'ownStoreInventory'])->name('own_store_inventory');
 Route::get('/own_store_inventory/search', [AdminController::class, 'ownInventorySearch'])->name('own.inventory.search');
 Route::delete('/own_store_inventory/{id}', [AdminController::class, 'ownInventoryDelete'])->name('own.inventory.delete');
+Route::get('/own_store_inventory/items', [AdminController::class, 'infiniteScroll'])->name('own.inventory.infinite-scroll');
 
 
 //入荷予定
@@ -74,24 +78,25 @@ Route::post('/arrival_Schedule/store', [AdminController::class, 'arrivalSchedule
 Route::post('/arrival_Schedule/complete', [AdminController::class, 'arrivalScheduleComplete'])->name('arrival_schedule.complete');
 
 
+
 //一般社員一覧
 Route::get('/employee_list', [AdminController::class, 'employeeList'])->name('employee_list');
 Route::get('/employee_list/search', [AdminController::class, 'employeeSearch'])->name('employee_list.search');
 Route::delete('/employees/{id}', [AdminController::class, 'employeesDelete'])->name('employees.delete');
 Route::get('/employees/create', [AdminController::class, 'employeeCreate'])->name('employees.create');
 Route::post('/employees/store', [AdminController::class, 'employeeStore'])->name('employees.store');
-Route::get('/employees/confirm', [AdminController::class, 'employeeConfirm'])->name('employees.confirm');
 Route::post('/employees/complete', [AdminController::class, 'employeeComplete'])->name('employees.complete');
+  
+});
 
-
-
-
+Route::prefix('employee')->group(function () {
 //社員
 //在庫一覧
 Route::get('/inventory', [DisplayController::class, 'index'])->name('inventory');
 Route::get('/general_inventory', [GeneralsController::class, 'index'])->name('inventory.general');
 Route::get('/inventory/search', [GeneralsController::class, 'inventorySearch'])->name('inventory.search');
 Route::delete('/inventory/{id}', [GeneralsController::class, 'inventoryDelete'])->name('inventory.delete');
+Route::get('/inventory/infinite-scroll', [GeneralsController::class, 'infiniteScroll'])->name('inventory.infinite-scroll');
 
 
 //入荷予定
@@ -114,5 +119,6 @@ Route::put('/arrival_list/{id}/update', [GeneralsController::class, 'arrivalList
 //入荷登録
 Route::post('/arrival/store', [GeneralsController::class, 'arrivalListStore'])->name('arrival_list.store');
 Route::post('/arrival/complete', [GeneralsController::class, 'arrivalListComplete'])->name('arrival_list.complete');
+});
 
-
+});

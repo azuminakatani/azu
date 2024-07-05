@@ -8,21 +8,21 @@
         @csrf
         <div class="form-group">
             <label for="store_id">店舗ID</label>
-            <input type="text" class="form-control" id="store_id" name="store_id" value="{{ old('store_id') }}">
+            <input type="text" class="form-control" id="store_id" name="store_id"  value="{{ old('store_id') ?: session('employee_registration.store_id') }}">
             @error('store_id')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-group">
             <label for="name">名前</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
+            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') ?: session('employee_registration.name') }}">
             @error('name')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-group">
             <label for="email">メールアドレス</label>
-            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
+            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') ?: session('employee_registration.email')}}">
             @error('email')
                 <div class="text-danger">{{ $message }}</div>
             @enderror

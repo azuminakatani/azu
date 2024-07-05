@@ -20,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label for="weight">重量</label>
-                <p>{{ $validatedData['weight'] }}</p>
+                <p>{{ $weight }}</p>
             </div>
             <form action="{{ route('arrival_list.complete') }}" method="post">
                 @csrf

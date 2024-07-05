@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 class RegistrationController extends Controller
 {
 
-    public function register(Request $request){//新規登録
+    public function register(Request $request){//新規登録画面
         return view('auth.register');
     }
 
@@ -36,7 +36,7 @@ class RegistrationController extends Controller
         $user->name = $userData['name'];
         $user->email = $userData['email'];
         $user->password = Hash::make($userData['password']);
-        $user->del_flg = 1;
+        $user->role = 1;
         $user->save();
 
         Session::forget('registration_data');
@@ -54,25 +54,5 @@ class RegistrationController extends Controller
         return view('inventory.search_results', compact('stocks'));
     }
 
-    public function allStoresList(){
-        return view('admin.all_stores_list');
-    }
-
-    public function productList(){
-        return view('admin.product_list');
-    }
-    
-    public function ownStoreInventory(){//自店舗在庫一覧
-        $stocks = Stock::where('store_id', Auth::user()->store_id)->get();
-        return view('admin.own_store_inventory', compact('stocks'));
-        }
-            
-    public function arrivalSchedule(){
-        return view('admin.arrival_schedule');
-        }
-    
-    public function employeeList(){
-        return view('admin.employee_list');
-        }
 }
 

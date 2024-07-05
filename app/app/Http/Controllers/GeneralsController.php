@@ -15,9 +15,29 @@ use Illuminate\Support\Facades\Auth;
 class GeneralsController extends Controller
 {
     public function index(){//在庫一覧
-        $stocks = Stock::where('store_id', Auth::user()->store_id)->get();
+        $stocks = Stock::where('store_id', Auth::user()->store_id)
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+        
         return view('general.inventory', compact('stocks'));
     }
+
+    public function infiniteScroll(Request $request){//
+        $store_id = auth()->user()->store_id;
+        $perPage = 10; 
+        
+        $stocks = Stock::where('store_id', $store_id)
+                   ->orderBy('created_at', 'desc')
+                   ->paginate($perPage);
+                   
+        if ($request->ajax()) {
+            return response()->json([
+                'stocks' => $stocks
+            ]);
+        } 
+        return view('general.inventory', compact('stocks'));
+    }
+
 
     public function inventoryDelete($id){//在庫削除
         $stock = Stock::findOrFail($id);
@@ -88,13 +108,17 @@ class GeneralsController extends Controller
             'product_id' => 'required|exists:products,id',
             'scheduled_date' => 'required|date',
             'quantity' => 'required|integer|min:1',
-            'weight' => 'required|numeric|min:0',
         ]);
         
         $product = Product::findOrFail($validatedData['product_id']);
-        Session::put('arrival_registration_data', $validatedData);
-        
-        return view('general.arrival_register_confirmation', compact('validatedData', 'product'));
+        $weight = $product->weight * $validatedData['quantity'];
+        Session::put('arrival_registration_data', [
+            'product_id' => $validatedData['product_id'],
+            'scheduled_date' => $validatedData['scheduled_date'],
+            'quantity' => $validatedData['quantity'],
+            'weight' => $weight,
+        ]);
+        return view('general.arrival_register_confirmation', compact('validatedData', 'product', 'weight'));
     }
 
     public function arrivalListComplete(Request $request){//入荷登録

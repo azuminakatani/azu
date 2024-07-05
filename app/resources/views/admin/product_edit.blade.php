@@ -33,6 +33,11 @@
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
+        <div class="form-group">
+            <label for="delete_image">
+                <input type="checkbox" id="delete_image" name="delete_image"> 写真を削除
+            </label>
+        </div>
         <button type="submit" class="btn btn-primary">更新</button>
         <a href="{{ route('product_list') }}" class="btn btn-secondary">戻る</a>
     </form>

@@ -15,11 +15,11 @@ class DisplayController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             
-            if ($user->del_flg === 0) {
+            if ($user->role === 0) {
                 $stores = Store::all();
                 return view('admin.all_stores_list', compact('stores'));
     
-            } elseif ($user->del_flg === 1) {
+            } elseif ($user->role === 1) {
                 $stocks = Stock::where('store_id', Auth::user()->store_id)->get();
                 return view('general.inventory', compact('stocks'));
             }
@@ -30,7 +30,6 @@ class DisplayController extends Controller
 
     public function login(Request $request)
     {
-        // ログインのバリデーション
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',

@@ -11,10 +11,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 
 class AdminController extends Controller
 {
+
+//全店舗・各店舗
     public function allStoresList(){//全店舗一覧
         $stores = Store::all();
         return view('admin.all_stores_list', compact('stores'));
@@ -40,12 +44,14 @@ class AdminController extends Controller
                 $q->where('name', 'like', '%' . $keyword . '%');
             });
         }
-    
         $stocks = $query->get();
         
         return view('admin.store_inventory_list', compact('store', 'stocks'));
     }
 
+
+
+//商品
     public function productList(){//商品一覧
         $products = Product::all();
         return view('admin.product_list', compact('products')); 
@@ -58,7 +64,6 @@ class AdminController extends Controller
         if ($keyword) {
             $query->where('name', 'like', '%' . $keyword . '%');
         }
-
         $products = $query->get();
 
         return view('admin.product_list', compact('products', 'keyword'));
@@ -70,7 +75,6 @@ class AdminController extends Controller
         return redirect()->back()->with('success', '商品が削除されました');
     }
 
-
     public function showProductRegistrForm(){//商品登録画面へ
         return view('admin.product_register');
     }
@@ -81,33 +85,37 @@ class AdminController extends Controller
             'weight' => 'required|numeric|min:0',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
+        if (\App\Product::where('name', $validatedData['name'])->exists()) {
+            return redirect()->back()->withErrors(['name' => '同じ商品名は使用できません。']);
+        }
+        $imagePath = null;
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->storeAs('public/images', $imageName);
-            $validatedData['image_url'] = '/storage/images/' . $imageName; 
-        } else {
-            $validatedData['image_url'] = null;
+            $imagePath = '/storage/images/' . $imageName;
         }
-    
-        return view('admin.product_register_confirmation', compact('validatedData'));
+
+        Session::put('product_registration_data', [
+            'name' => $validatedData['name'],
+            'weight' => $validatedData['weight'],
+            'image_url' => $imagePath,
+        ]);    
+        return view('admin.product_register_confirmation', compact('validatedData' ,'imagePath'));
     }
     
     public function ProductRegistrConfirm(Request $request) {//商品登録確認
 
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'weight' => 'required|numeric|min:0',
-            'image_url' => 'nullable|string',
-        ]);
+        $validatedData = Session::get('product_registration_data');
     
         $product = new Product();
         $product->name = $validatedData['name'];
         $product->weight = $validatedData['weight'];
         $product->image_url = $validatedData['image_url'];
         $product->save();
-    
+
+        Session::forget('product_registration_data');
         return redirect()->route('product_list');
     }
 
@@ -116,34 +124,43 @@ class AdminController extends Controller
         return view('admin.product_edit', compact('product'));
     }
 
+
     public function productUpdate(Request $request, $id){//商品編集
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'weight' => 'required|numeric|min:0',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', 
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        if ($request->hasFile('image')) {
+    
+        $product = Product::findOrFail($id);
+    
+        if ($request->has('delete_image')) {
+            if ($product->image_url) {
+                Storage::delete('public/images/' . basename($product->image_url));
+                $product->image_url = null;}
+        } elseif ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->storeAs('public/images', $imageName);
             $validatedData['image_url'] = '/storage/images/' . $imageName;
-        }
 
-        $product = Product::findOrFail($id); 
-        $product->name = $validatedData['name'];
-        $product->weight = $validatedData['weight'];
-        if (isset($validatedData['image_url'])) {
+            if ($product->image_url) {
+                Storage::delete('public/images/' . basename($product->image_url));
+            }
             $product->image_url = $validatedData['image_url'];
         }
+    
+        $product->name = $validatedData['name'];
+        $product->weight = $validatedData['weight'];
         $product->save();
-
+    
         return redirect()->route('product_list')->with('success', '商品を更新しました。');
     }
-
     
 
 
+//自店舗
     public function ownStoreInventory(){//自店舗在庫一覧
         $stocks = Stock::where('store_id', Auth::user()->store_id)->get();
         return view('admin.own_store_inventory_list', compact('stocks'));
@@ -171,12 +188,13 @@ class AdminController extends Controller
         return redirect()->back()->with('success', '在庫が削除されました');
     }
             
-    public function arrivalSchedule(){//入荷予定一覧
+
+//入荷予定
+   public function arrivalSchedule(){//入荷予定一覧
         $user = Auth::user();
         $incomingShipments = IncomingShipment::where('store_id', Auth::user()->store_id)->get();
         return view('admin.arrival_schedule_list', compact('incomingShipments'));
-    }
-
+    } 
 
     public function searchArrivalSchedule(Request $request){//入荷予定検索
         $start_date = $request->input('start_date');
@@ -189,53 +207,44 @@ class AdminController extends Controller
         if ($start_date) {
             $query->where('scheduled_date', '>=', $start_date);
         } 
-    
         if ($end_date) {
             $query->where('scheduled_date', '<=', $end_date);
         }
-    
         if ($keyword) {
             $query->whereHas('product', function ($q) use ($keyword) {
                 $q->where('name', 'like', '%' . $keyword . '%');
             });
         }
-    
         $incomingShipments = $query->get();
-    
+
         return view('admin.arrival_schedule_list', compact('incomingShipments', 'start_date', 'end_date', 'keyword'));
     }
     
     public function arrivalScheduleCreate(Request $request){//入荷登録画面表示
         $products = Product::all();
         return view('admin.arrival_schedule_register', compact('products'));
-    }    
+    }   
 
     public function arrivalScheduleStore(Request $request){//入荷登録確認画面へ
         $validatedData = $request->validate([
             'product_id' => 'required|exists:products,id',
             'scheduled_date' => 'required|date',
             'quantity' => 'required|integer|min:1',
-            'weight' => 'required|numeric|min:0',
         ]);
         $product = Product::findOrFail($validatedData['product_id']);
-
-        Session::put('arrival_registration', $validatedData);
-        Session::put('arrival_product', $product);
-
-        return view('admin.arrival_schedule_register_confirmation', compact('validatedData', 'product'));
+        $weight = $product->weight * $validatedData['quantity'];
+        Session::put('arrival_registration', [
+            'product_id' => $validatedData['product_id'],
+            'scheduled_date' => $validatedData['scheduled_date'],
+            'quantity' => $validatedData['quantity'],
+            'weight' => $weight,
+        ]);
+        return view('admin.arrival_schedule_register_confirmation', compact('validatedData', 'product', 'weight'));
     }
 
     public function arrivalScheduleComplete(Request $request){//入荷登録
 
         $validatedData = Session::get('arrival_registration');
-        $product = Session::get('arrival_product');
-        
-        $validatedData = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'scheduled_date' => 'required|date',
-            'quantity' => 'required|integer|min:1',
-            'weight' => 'required|numeric|min:0',
-        ]);
     
         $shipment = new IncomingShipment();
         $shipment->product_id = $validatedData['product_id'];
@@ -246,8 +255,6 @@ class AdminController extends Controller
         $shipment->save();
 
         Session::forget('arrival_registration');
-        Session::forget('arrival_product');
-    
         return redirect()->route('arrival_schedule');
     }
          
@@ -262,7 +269,6 @@ class AdminController extends Controller
             $stock->quantity += $incomingShipment->quantity;
             $stock->weight += $incomingShipment->weight;
             $stock->save();
-        
         } else { 
             $stock = new Stock();
             $stock->product_id = $incomingShipment->product_id;
@@ -271,16 +277,15 @@ class AdminController extends Controller
             $stock->weight = $incomingShipment->weight;
             $stock->save();
         }
-        
         $incomingShipment->delete();
         return redirect()->route('arrival_schedule');
     }
     
 
 
-
+//一般社員
     public function employeeList(){//一般社員一覧
-        $employees = User::where('del_flg', 1)->get();
+        $employees = User::where('role', 1)->get();
         return view('admin.employee_list', compact('employees'));
     }
 
@@ -295,11 +300,10 @@ class AdminController extends Controller
             });
         }
 
-        $employees = $query->where('del_flg', 1)->get();
+        $employees = $query->where('role', 1)->get();
 
         return view('admin.employee_list', compact('employees', 'keyword'));
     }
-
 
     public function employeesDelete($id){//一般社員削除
         $employee = User::findOrFail($id); 
@@ -308,8 +312,7 @@ class AdminController extends Controller
     }
     
     public function employeeCreate(){//登録画面へ
-        $validatedData = Session::get('employee_registration', []);
-        return view('admin.employee_register', compact('validatedData'));
+        return view('admin.employee_register');
     }
         
     public function employeeStore(Request $request){//登録確認画面へ
@@ -320,11 +323,7 @@ class AdminController extends Controller
             'password' => 'required|min:8',
         ]);
         Session::put('employee_registration', $validatedData);
-        return redirect()->route('employees.confirm');
-    }
-    
-    public function employeeConfirm(){//
-        $validatedData = Session::get('employee_registration');
+
         return view('admin.employee_register_confirmation', compact('validatedData'));
     }
     
@@ -336,7 +335,7 @@ class AdminController extends Controller
         $employee->name = $validatedData['name'];
         $employee->email = $validatedData['email'];
         $employee->password = Hash::make($validatedData['password']);
-        $employee->del_flg = 1;
+        $employee->role = 1;
         $employee->save();
 
         Session::forget('employee_registration');

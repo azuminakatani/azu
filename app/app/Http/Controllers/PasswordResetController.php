@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPasswordMail;
 
+
 class PasswordResetController extends Controller
 {
     public function showResetEmailForm(){//メール送信画面
@@ -25,7 +26,9 @@ class PasswordResetController extends Controller
             return back()->withErrors(['email' => '指定されたメールアドレスは登録されていません。']);
         }
 
-        $token = Password::broker()->createToken($user);
+        $token = Str::random(60);
+        $user->reset_token = $token;
+        $user->save();
         $resetUrl = route('password.reset', ['token' => $token]);
 
         Mail::to($user->email)->send(new ResetPasswordMail($user, $resetUrl));
@@ -33,33 +36,29 @@ class PasswordResetController extends Controller
         return back()->with('status', 'パスワードリセットのリンクをメールで送信しました。');   
     }
 
-    public function showResetForm($token){//再設定画面
+    public function showResetForm($token){//再設定画面へ
         return view('auth.reset', ['token' => $token]);
     }
 
-    public function reset(Request $request){//再設定
-        $request->validate([
+    public function reset(Request $request){//再設定完了画面へ
+        // dd($request);
+        /*$request->validate([
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
-        ]);
+        ]);*/
 
-        $status = Password::broker()->reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
-                $user->password = Hash::make($password);
-                $user->save();
-            }
-        );
+        $user = User::where('email', $request->email)->first();
 
-        if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('password.reset.complete');
-        } else {
-            return back()->withErrors(['email' => [trans($status)]]);
-        }
-    }
+        /*if (! $user || $user->reset_token !== $request->token) {
+            return back()->withErrors(['email' => '無効なトークンです。']);
+        }*/
+        // dd('1');
+        $user->password = Hash::make($request->password);
+        $user->reset_token = null;
+        $user->save();
 
-    public function showResetCompleteForm(){//完了画面
         return view('auth.reset_complete');
     }
+
 }
