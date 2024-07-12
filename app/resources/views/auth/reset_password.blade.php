@@ -7,6 +7,7 @@
     <title>パスワードリセット</title>
 </head>
 <body>
+<div class="row justify-content-center mt-5">
     <h2>パスワードリセット</h2>
 
     <p>こんにちは、{{ $user->name }} 様</p>
@@ -15,5 +16,6 @@
     <p><a href="{{ $resetUrl }}">{{ $resetUrl }}</a></p>
 
     <p>よろしくお願いします。</p>
+</div>
 </body>
 </html>

@@ -17,13 +17,18 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
+    <style>
+        .custom-navbar {
+            background-color: #e3f2fd; /* 水色の背景色 */
+        }
+    </style>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @yield('stylesheet')
 </head>
 <body>
 </div>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md  custom-navbar">
             <div class="container">
             <a class="navbar-brand" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 login

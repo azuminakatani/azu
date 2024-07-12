@@ -20,11 +20,11 @@ class DisplayController extends Controller
                 return view('admin.all_stores_list', compact('stores'));
     
             } elseif ($user->role === 1) {
-                $stocks = Stock::where('store_id', Auth::user()->store_id)->get();
+                $stocks = Stock::where('store_id', Auth::user()->store_id)
+                ->paginate(10);
                 return view('general.inventory', compact('stocks'));
             }
         }
-        
         return view('auth.login');
     }
 

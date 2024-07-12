@@ -3,6 +3,7 @@
 
 @section('content')
 <div class="container">
+<div class="row justify-content-center mt-5">
     <div class="text-center mb-3"><h2>全店舗一覧</h2></div>
     <form action="{{ route('store.search') }}" method="GET" class="mb-3">
     <div class="input-group">
@@ -12,12 +13,12 @@
         </div>
     </div>
     </form>
-        <table class="table">
+        <table class="table col-md-8 table-striped">
             <thead>
                 <tr>
                     <th>詳細</th>
                     <th>店舗名</th>
-                    <th>ID</th>    
+                    <th>店舗ID</th>    
                 </tr>
             </thead>
             <tbody>

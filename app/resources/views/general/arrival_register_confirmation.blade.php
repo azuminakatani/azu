@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
-            <div class="text-center mb-3"><h3>入荷登録確認</h3>
+            <div class="text-center mb-3"><h2>入荷登録確認</h2>
             <div class="form-group">
                 <label for="product">商品名</label>
                 <p>{{ $product->name }}</p>

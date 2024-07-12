@@ -3,6 +3,7 @@
 
 @section('content')
 <div class="container">
+    <div class="row justify-content-center mt-5">
 <div class="text-center mb-3"><h2>商品一覧</h2></div>
     <div class="search-box mb-3">
         <form action="{{ route('products.search') }}" method="GET">
@@ -14,7 +15,7 @@
             </div>
         </form>
     </div>
-    <div class="col-md-4 text-right">
+    <div class="text-reight mb-3">
         <a href="{{ route('products.register') }}" class="btn btn-primary">商品登録画面へ</a>
     </div>
     <div class="row">

@@ -3,6 +3,7 @@
 
 @section('content')
     <div class="container">
+    <div class="row justify-content-center mt-5">
     <div class="text-center mb-3"><h2>自店舗在庫一覧</h2></div>
     <form action="{{ route('own.inventory.search') }}" method="GET">
     <div class="input-group mb-3">
@@ -12,7 +13,7 @@
         </div>
     </div>
 </form>
-        <table class="table">
+        <table class="table col-md-8 table-striped">
             <thead>
                 <tr>
                     <th>商品</th>

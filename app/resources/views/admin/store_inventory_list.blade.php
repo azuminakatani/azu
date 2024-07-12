@@ -2,18 +2,20 @@
 @extends('layouts.layout')
 
 @section('content')
-    <div class="container">
+<div class="container">
+    <div class="row justify-content-center mt-5">
     <div class="text-center mb-3"><h2>{{ $store->name }}在庫一覧</h2></div>
-    <div class="text-center mb-3">
         <form action="{{ route('admin.stocks', $store->id) }}" method="GET" class="form-inline">
-                @csrf
-                <div class="form-group mr-3">
+                @csrf    
+                <div class="input-group">
                     <input type="text" id="keyword" name="keyword" placeholder="商品名で検索" class="form-control" value="{{ $keyword ?? '' }}">
-                </div>
-                <button type="submit" class="btn btn-primary">検索</button>
+                <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-secondary">検索</button>
+                </div></div>
             </form>
-        </div>
-    <table class="table">
+    <div class="text-reight mt-3">
+        <a href="{{ route('all_stores_list') }}" class="btn btn-secondary">全店舗一覧に戻る</a></div>
+        <table class="table col-md-8 table-striped">
             <thead>
                 <tr>
                     <th>商品</th>
@@ -29,7 +31,6 @@
                     <td>{{ $stock->weight }}</td>
                 </tr>
                 @endforeach
-                <a href="{{ route('all_stores_list') }}" class="btn btn-secondary">全店舗一覧に戻る</a>
             </tbody>
         </table>
     </div></div>

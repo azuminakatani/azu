@@ -23,6 +23,7 @@ Auth::routes();
 Route::get('/', [DisplayController::class, 'index']);
 Route::post('/login', [DisplayController::class, 'login'])->name('login');
 
+
 //新規登録
 Route::post('/register', [RegistrationController::class, 'register'])->name('register');
 Route::post('/register/confirm', [RegistrationController::class, 'confirm'])->name('register.confirm');

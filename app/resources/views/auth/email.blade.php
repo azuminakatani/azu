@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
-                <div class="text-center mb-3"><h3>パスワード再設定</h3></div>
+                <div class="text-center mb-3"><h2>パスワード再設定</h2></div>
 
                 <div class="card-body">
                     @if (session('status'))

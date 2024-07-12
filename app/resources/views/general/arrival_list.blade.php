@@ -3,11 +3,12 @@
 
 @section('content')
 <div class="container">
+    <div class="row justify-content-center mt-5">
 <div class="text-center mb-3"><h2>入荷予定一覧</h2></div>
-    <div class="col-md-4 text-right">
+    <div class="col text-right">
         <a href="{{ route('arrival_list.create') }}" class="btn btn-primary">入荷登録画面へ</a>
     </div>
-    <div class="search-box">
+    <div class="search-box mt-3">
         <form action="{{ route('arrival_list.search') }}" method="GET" class="form-inline">
             @csrf
             <div class="row">
@@ -34,7 +35,7 @@
 
     
     <div class="row justify-content-center">
-        <table class="table col-md-8">
+        <table class="table col-md-8 table-striped">
             <thead>
                 <tr>
                     <th class="text-center">詳細</th>

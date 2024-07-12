@@ -53,7 +53,7 @@ class PasswordResetController extends Controller
         /*if (! $user || $user->reset_token !== $request->token) {
             return back()->withErrors(['email' => '無効なトークンです。']);
         }*/
-        // dd('1');
+
         $user->password = Hash::make($request->password);
         $user->reset_token = null;
         $user->save();

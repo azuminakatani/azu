@@ -3,6 +3,7 @@
 
 @section('content')
 <div class="container">
+<div class="row justify-content-center mt-5">
     <div class="text-center mb-3"><h2>入荷編集</h2></div>
     <form action="{{ route('arrival_update', $incomingShipment->id) }}" method="POST">
         @csrf

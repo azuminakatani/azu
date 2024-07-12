@@ -3,6 +3,7 @@
 
 @section('content')
 <div class="container">
+<div class="row justify-content-center mt-5">
 <div class="text-center mb-3"><h2>入荷詳細</h2></div>
             <div class="text-center mb-3"><strong>商品名:</strong> {{ $incomingShipment->product->name }}</div>  
             <div class="text-center mb-3"><strong>入荷予定日:</strong> {{ $incomingShipment->scheduled_date }}</div>

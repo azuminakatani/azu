@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
-            <div class="text-center mb-3"><h3>新規登録確認</h3></div>
+            <div class="text-center mb-3"><h2>新規登録確認</h2></div>
             <div class="text-center mb-3">
                 <p>ユーザー名: <strong>{{ $validatedData['name'] }}</strong></p>
                 <p>メールアドレス: <strong>{{ $validatedData['email'] }}</strong></p>

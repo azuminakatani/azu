@@ -3,8 +3,9 @@
 
 @section('content')
 <div class="container">
-    <h1 class="text-center mb-4">入荷予定一覧</h1>
-    <div class="col-md-4 text-right">
+<div class="row justify-content-center mt-5">
+    <h2 class="text-center mb-4">入荷予定一覧</h2>
+    <div class="text-right mb-3">
         <a href="{{ route('arrival_schedule.create') }}" class="btn btn-primary">入荷登録画面へ</a>
     </div>
     <div class="search-box">
@@ -36,25 +37,25 @@
         </div>
     </form>
 </div>
-    <div class="row justify-content-center">
-        <table class="table col-md-8">
+    <div class="row justify-content-center mt-3">
+        <table class="table col-md-8 table-striped">
             <thead>
                 <tr>                    
-                    <th class="text-center">商品名</th>
-                    <th class="text-center">入荷予定日</th>
-                    <th class="text-center">数量</th>
-                    <th class="text-center">重量</th>
-                    <th class="text-center">確定</th>
+                    <th>商品名</th>
+                    <th>入荷予定日</th>
+                    <th>数量</th>
+                    <th>重量</th>
+                    <th>確定</th>
                 </tr>
             </thead>
             <tbody>
             @foreach ($incomingShipments as $incomingShipment)
             <tr>
-                <td class="text-center">{{ $incomingShipment->product->name }}</td>
-                <td class="text-center">{{ $incomingShipment->scheduled_date }}</td>
-                <td class="text-center">{{ $incomingShipment->quantity }}</td>
-                <td class="text-center">{{ $incomingShipment->weight }}</td>
-                <td class="text-center">
+                <td>{{ $incomingShipment->product->name }}</td>
+                <td>{{ $incomingShipment->scheduled_date }}</td>
+                <td>{{ $incomingShipment->quantity }}</td>
+                <td>{{ $incomingShipment->weight }}</td>
+                <td>
                     <a href="{{ route('arrival_schedule.confirm', $incomingShipment->id) }}" class="btn btn-success"onclick="return confirm('この入荷を確定しますか？')">確定</a>
                 </td>
             </tr>

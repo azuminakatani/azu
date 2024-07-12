@@ -3,6 +3,7 @@
 
 @section('content')
 <div class="container">
+    <div class="row justify-content-center mt-5">
 <div class="text-center mb-3"><h2>商品登録</h2></div>
     <form action="{{ route('products.register.post') }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -13,14 +14,14 @@
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <div class="form-group">
+        <div class="form-group mt-3">
             <label for="weight">重量</label>
             <input type="number" step="0.01" class="form-control @error('weight') is-invalid @enderror" id="weight" name="weight" value="{{ old('weight') ?: session('product_registration_data.weight') }}" required>
             @error('weight')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <div class="form-group">
+        <div class="form-group mt-3 mb-3">
             <label for="image">写真追加</label>
             <input type="file" class="form-control-file @error('image') is-invalid @enderror" id="image" name="image" value="{{ old('image_url') ?: session('product_registration_data.image_url') }}">
             @error('image')
@@ -30,8 +31,9 @@
             <img src="{{ Session::get('product_registration_data.image_url') }}" style="max-width: 100%; max-height: 200px;">
             @endif
         </div>
-        <button type="submit" class="btn btn-primary">登録確認</button>
+        <div class="text-center mb-3">
+        <button type="submit" class="btn btn-primary ">登録確認</button>
     </form>
-    <a href="{{ route('product_list') }}" class="btn btn-secondary">戻る</a>
+    <a href="{{ route('product_list') }}" class="btn btn-secondary">戻る</a></div>
 </div>
 @endsection

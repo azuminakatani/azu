@@ -3,6 +3,7 @@
 
 @section('content')
 <div class="container">
+<div class="row justify-content-center mt-5">
 <div class="text-center mb-3"><h2>一般社員一覧</h2></div>
 <div class="search-box mb-3">
     <form action="{{ route('employee_list.search') }}" method="GET">
@@ -18,13 +19,13 @@
         <a href="{{ route('employees.create') }}" class="btn btn-primary">社員登録</a>
     </div>
     <div class="employee-list">
-        <table class="table">
+        <table class="table col-md-8 table-striped">
             <thead>
                 <tr>
                     <th>店舗ID</th>
                     <th>名前</th>
                     <th>メールアドレス</th>
-                    <th>削除</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>

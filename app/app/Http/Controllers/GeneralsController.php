@@ -22,12 +22,12 @@ class GeneralsController extends Controller
         return view('general.inventory', compact('stocks'));
     }
 
-    public function infiniteScroll(Request $request){//
+    public function infiniteScroll(Request $request){//無限スクロール
         $store_id = auth()->user()->store_id;
         $perPage = 10; 
         
-        $stocks = Stock::where('store_id', $store_id)
-                   ->orderBy('created_at', 'desc')
+        $stocks = Stock::with('product')
+                   ->where('store_id', $store_id)
                    ->paginate($perPage);
                    
         if ($request->ajax()) {
@@ -37,7 +37,6 @@ class GeneralsController extends Controller
         } 
         return view('general.inventory', compact('stocks'));
     }
-
 
     public function inventoryDelete($id){//在庫削除
         $stock = Stock::findOrFail($id);
@@ -61,7 +60,8 @@ class GeneralsController extends Controller
         return view('general.inventory', compact('stocks', 'keyword'));
     }
     
-
+    
+//入荷予定
     public function arrivalList(){//入荷予定一覧
         $user = Auth::user();
         $incomingShipments = IncomingShipment::where('store_id', Auth::user()->store_id)->get();
